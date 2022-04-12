@@ -37,14 +37,18 @@ public class ThreadClient extends Thread {
 //                System.out.println(message.getSender());
                 // send this message to other clients
 //                this.threadServer.sendToAll(message);
-                if(!(message.getReceiver() == null)) {
-                    this.threadServer.sendToAClient(message, message.getReceiver());
+                System.out.println("Request dalam client di ser "+message.getRequest()+" "+message.getSender());
+                if(message.getRequest().equals("False")){
+                    if(!(message.getReceiver() == null)) {
+                        this.threadServer.sendToAClient(message, message.getReceiver(), message.getSender());
+                    }
+
+                }else{
+                    System.out.println("Masuk else "+message.getSender());
+
+                    this.threadServer.getOnlineUser(message);
                 }
-//                this.threadServer.wait();
                 this.threadServer.setNameID(message);
-//                this.threadServer.join(2000);
-
-
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (ClassNotFoundException e) {

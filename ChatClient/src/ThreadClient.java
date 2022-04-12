@@ -4,24 +4,32 @@ import java.io.ObjectOutputStream;
 
 public class ThreadClient extends Thread {
     private ObjectInputStream objectInputStream;
-    private String NameClient;
 
-    public ThreadClient(ObjectInputStream objectInputStream, String NameClient) {
+    public ThreadClient(ObjectInputStream objectInputStream) {
         this.objectInputStream = objectInputStream;
-        this.NameClient = NameClient;
     }
 
     @Override
     public void run() {
         while (true) {
             Message message;
-//            System.out.println("jalan2");
+            String ch = "";
             try {
                 message = (Message) this.objectInputStream.readObject();
-                System.out.println(message.getSender() + " : " + message.getText());
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
+                System.out.println(message.getRequest());
+                if (message.getRequest()=="False"){
+                    if(message.getType().equals("1")){
+                        ch = "[ALL]";
+                    }
+                    else if(message.getType().equals("2")){
+                        ch = "[Chat]";
+                    }
+                    System.out.println(message.getSender() + ch +" : " + message.getText());
+                }else{
+                    System.out.println(message.getListOnline());
+                }
+
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }

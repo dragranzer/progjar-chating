@@ -10,8 +10,8 @@ public class ThreadServer extends Thread {
     private ServerSocket serverSocket;
 
     public ThreadServer() throws IOException {
-        this.clientList = new Hashtable<String, ThreadClient>();
-        this.clientNameList = new Hashtable<String, String>();
+        this.clientList = new Hashtable<>();
+        this.clientNameList = new Hashtable<>();
         this.serverSocket = new ServerSocket(6666);
     }
 
@@ -32,7 +32,6 @@ public class ThreadServer extends Thread {
                 // store the new thread to the hashtable
                 String clientId = socket.getInetAddress().getHostAddress() + ":" + socket.getPort();
                 this.clientList.put(clientId, threadClient);
-//                this.join(3000);
 //                System.out.println("Finish");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -47,18 +46,20 @@ public class ThreadServer extends Thread {
 
         while (e.hasMoreElements()) {
             String clientId = e.nextElement();
-//            System.out.println(clientId);
             // send the message
             ThreadClient threadClient = this.clientList.get(clientId);
             threadClient.send(message);
         }
     }
 
-    public void sendToAClient(Message message, String dst) throws IOException {
+    public void sendToAClient(Message message, String dst, String src) throws IOException {
         if(clientNameList.containsKey(dst)) {
             String clientId = clientNameList.get(dst);
-            ThreadClient threadClient = this.clientList.get(clientId);
-            threadClient.send(message);
+            String me = clientNameList.get(src);
+            ThreadClient tc = this.clientList.get(me);
+            tc.send(message);
+            tc = this.clientList.get(clientId);
+            tc.send(message);
         }else if(dst.equalsIgnoreCase("All")){
             sendToAll(message);
         }
@@ -68,7 +69,6 @@ public class ThreadServer extends Thread {
     }
 
     public void setNameID(Message message) throws IOException {
-//        System.out.println("GET CLIENT LIST");
         Enumeration<String> e = this.clientList.keys();
         String nameClient = message.getSender();
 
@@ -80,9 +80,18 @@ public class ThreadServer extends Thread {
                 this.clientNameList.put(nameClient, clientId);
             }
         }
-//        if (!clientNameList.containsValue(nameClient){
-//                this.clientNameList.put(nameClient, clientId);
-//        }
         System.out.println(clientNameList);
     }
+
+    public void getOnlineUser(Message message) throws IOException {
+        String clientName = message.getSender();
+        String clientId = clientNameList.get(clientName);
+        System.out.println("List online"+this.clientNameList);
+        message.setListOnline(this.clientNameList);
+        message.setText(this.clientNameList.toString());
+        message.setRequest("True");
+        ThreadClient tc = this.clientList.get(clientId);
+        tc.send(message);
+    }
+
 }

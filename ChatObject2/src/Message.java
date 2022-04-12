@@ -1,10 +1,13 @@
 import java.io.Serializable;
+import java.util.Hashtable;
 
 public class Message implements Serializable {
     private String sender;
     private String text;
     private String receiver;
     private String type;
+    private Hashtable<String, String> listOnline;
+    private String request;
 
     public String getSender() {
         return sender;
@@ -36,5 +39,21 @@ public class Message implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Hashtable<String, String> getListOnline() {
+        return listOnline;
+    }
+
+    public void setListOnline(Hashtable<String, String> listOnline) {
+        this.listOnline = listOnline;
+    }
+
+    public String getRequest() {
+        return request;
+    }
+
+    public void setRequest(String request) {
+        this.request = request;
     }
 }
