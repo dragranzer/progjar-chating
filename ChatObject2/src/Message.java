@@ -1,7 +1,10 @@
 import java.io.Serializable;
 
 public class Message implements Serializable {
-    private String sender, text, receiver;
+    private String sender;
+    private String text;
+    private String receiver;
+    private String type;
 
     public String getSender() {
         return sender;
@@ -25,5 +28,13 @@ public class Message implements Serializable {
 
     public void setReceiver(String receiver) {
         this.receiver = receiver;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

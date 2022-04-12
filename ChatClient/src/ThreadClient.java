@@ -14,8 +14,8 @@ public class ThreadClient extends Thread {
     @Override
     public void run() {
         while (true) {
-            Message message = null;
-            System.out.println("jalan2");
+            Message message;
+//            System.out.println("jalan2");
             try {
                 message = (Message) this.objectInputStream.readObject();
                 System.out.println(message.getSender() + " : " + message.getText());

@@ -31,13 +31,20 @@ public class ThreadClient extends Thread {
             // jalan tiap kali chat client di enter
             try {
                 Message message = (Message) this.objectInputStream.readObject();
-                System.out.println("jalan");
+//                System.out.println("jalan");
 
                 //append list id and name
 //                System.out.println(message.getSender());
-                this.threadServer.setNameID(message);
                 // send this message to other clients
-                this.threadServer.sendToAll(message);
+//                this.threadServer.sendToAll(message);
+                if(!(message.getReceiver() == null)) {
+                    this.threadServer.sendToAClient(message, message.getReceiver());
+                }
+//                this.threadServer.wait();
+                this.threadServer.setNameID(message);
+//                this.threadServer.join(2000);
+
+
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (ClassNotFoundException e) {
@@ -45,4 +52,5 @@ public class ThreadClient extends Thread {
             }
         }
     }
+
 }

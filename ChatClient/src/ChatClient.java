@@ -15,22 +15,45 @@ public class ChatClient {
             ThreadClient threadClient = new ThreadClient(new ObjectInputStream(socket.getInputStream()), username);
             threadClient.start();
 
+            Message messageObjectfirst = new Message();
+            messageObjectfirst.setSender(username);
+            objectOutputStream.writeObject(messageObjectfirst);
+            objectOutputStream.flush();
 
             while (true) {
-                System.out.println("Type your message: ");
-                String message = bufferedReader.readLine();
+                System.out.println("Welcome to Whyapp!\n" +
+                        "1. Chat\n" +
+                        "2. See Online Users\n");
+                String task = bufferedReader.readLine();
+                switch (task){
+                    case "1":{
+                        System.out.println("Select which channel do you want to send message :\n" +
+                                "1. All\n" +
+                                "2. Private\n");
+                        String choice = bufferedReader.readLine();
 
-                System.out.println("Send To: ");
-                String receiver = bufferedReader.readLine();
+                        System.out.println("Type your message: ");
+                        String message = bufferedReader.readLine();
 
-                Message messageObject = new Message();
-                messageObject.setSender(username);
-                messageObject.setText(message);
-                messageObject.setReceiver(receiver);
+                        System.out.println("Send To: ");
+                        String receiver = bufferedReader.readLine();
 
-                objectOutputStream.writeObject(messageObject);
+                        Message messageObject = new Message();
+                        messageObject.setSender(username);
+                        messageObject.setType(choice);
+                        messageObject.setText(message);
+                        messageObject.setReceiver(receiver);
 
-                objectOutputStream.flush();
+                        objectOutputStream.writeObject(messageObject);
+
+                        objectOutputStream.flush();
+                    }
+                    case "2": {
+                        System.out.println("OK");
+
+                    }
+                }
+
             }
 
         } catch (IOException e) {
