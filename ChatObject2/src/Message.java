@@ -8,6 +8,7 @@ public class Message implements Serializable {
     private String type;
     private Hashtable<String, String> listOnline;
     private String request;
+    private String stat;
 
     public String getSender() {
         return sender;
@@ -55,5 +56,13 @@ public class Message implements Serializable {
 
     public void setRequest(String request) {
         this.request = request;
+    }
+
+    public String getStat() {
+        return stat;
+    }
+
+    public void setStat(String stat) {
+        this.stat = stat;
     }
 }

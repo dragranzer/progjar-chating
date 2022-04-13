@@ -3,6 +3,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Set;
 
 public class ThreadServer extends Thread {
     private Hashtable<String, ThreadClient> clientList;
@@ -74,24 +75,50 @@ public class ThreadServer extends Thread {
 
         while (e.hasMoreElements()) {
             String clientId = e.nextElement();
-//            System.out.println("SETNAMEID: " + clientId);
-//            System.out.println(clientId);
-            if (!clientNameList.containsValue(clientId)){
+            if (!this.clientNameList.containsValue(clientId)){
                 this.clientNameList.put(nameClient, clientId);
             }
         }
-        System.out.println(clientNameList);
+        System.out.println(this.clientNameList);
     }
 
     public void getOnlineUser(Message message) throws IOException {
         String clientName = message.getSender();
-        String clientId = clientNameList.get(clientName);
-        System.out.println("List online"+this.clientNameList);
-        message.setListOnline(this.clientNameList);
-        message.setText(this.clientNameList.toString());
-        message.setRequest("True");
+        String clientId = this.clientNameList.get(clientName);
+        String clientlist = this.clientNameList.toString();
+
+//        System.out.println("Online user" + clientNameList);
+        message.setListOnline(clientNameList);
+
+        Hashtable<String, String> hashtable = clientNameList;
+        Set<String> keys = hashtable.keySet();
+        String usersOnline = "";
+
+//        System.out.println("Users Online :");
+        for(String key: keys){
+            usersOnline = usersOnline.concat(key);
+            usersOnline = usersOnline.concat("\n");
+        }
+        message.setText(usersOnline);
+
         ThreadClient tc = this.clientList.get(clientId);
+//        System.out.println("Message Online " + message.getListOnline());
         tc.send(message);
+    }
+
+    public void logout(Message message) throws IOException {
+        String nameClient = message.getSender();
+        String clientId = this.clientNameList.get(nameClient);
+        ThreadClient tc = this.clientList.get(clientId);
+
+        this.clientNameList.remove(nameClient);
+        this.clientList.remove(clientId);
+
+        message.setText("Logout..");
+        tc.send(message);
+
+        System.out.println(nameClient +": " + clientId + " has logged out");
+        System.out.println(this.clientNameList);
     }
 
 }
